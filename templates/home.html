@@ -1,0 +1,12 @@
+{% extends 'header.html' %}
+
+<!--Block content goes below-->
+
+
+  {% block content %}
+    <ul>
+    {% for record in questions %}
+        <li><a href="{% url 'details' record.id %}">{{record.question}}(Published on: {{record.created_date}})</a></li>
+    {% endfor %}
+    </ul>
+  {% endblock %}

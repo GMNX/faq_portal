@@ -1,0 +1,60 @@
+{% extends 'header.html' %}
+
+<!--Block content goes below-->
+
+
+  {% block content %}
+    <div id="currency-card" class="card">
+        <div class="card-body">
+        <h2 class="text-center">Currency Conversion US dollars to Euro</h2>
+        <br>
+        <form action="#">
+            <div class="form-group">
+            <input type="number" class="form-control" id="usd_currency" placeholder="Enter USD Currency" name="usd">
+            </div>
+        <br>
+            <br>
+        <h2>Euro :</h2>
+        <h2 id="eur_currency">€ 0</h2>
+        </form>
+        </div>
+    </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/money.js/0.0.1/money.min.js" crossorigin="anonymous"></script>
+  <script type="text/javascript">
+    // Load exchange rates data :
+    let url = 'https://openexchangerates.org/api/latest.json?app_id=a740664abda747de94ce309a3dbab881';
+
+    fetch(url)
+    .then(res => res.json())
+    .then(data =>{
+        // Check money.js has finished loading:
+        if ( typeof fx !== "undefined" && fx.rates ) {
+                fx.rates = data.rates;
+                fx.base = data.base;
+            } else {
+                // If not, apply to fxSetup global:
+                var fxSetup = {
+                    rates : data.rates,
+                    base : data.base
+                }
+            }
+    })
+    .catch(err => console.log(err));
+
+    fx.settings = {
+        from : "USD",
+        to : "EUR"
+    };
+
+    const source = document.getElementById('usd_currency');
+    const result = document.getElementById('eur_currency');
+
+    const inputHandler = function(e) {
+    result.innerHTML = "€ "+fx.convert(e.target.value);
+    }
+
+    source.addEventListener('input', inputHandler);
+    source.addEventListener('propertychange', inputHandler);
+</script>
+  {% endblock %}
